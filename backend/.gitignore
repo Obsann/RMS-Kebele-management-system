@@ -1,0 +1,6 @@
+node_modules
+.env
+api.md
+dbSchema.md
+roleDefinition.md
+test.js
