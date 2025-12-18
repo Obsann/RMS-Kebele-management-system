@@ -1,11 +1,6 @@
 import React from 'react';
 
-interface StatusBadgeProps {
-  status: 'pending' | 'in-progress' | 'completed' | 'approved' | 'rejected' | 'active' | 'inactive';
-  size?: 'sm' | 'md';
-}
-
-export default function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
+export default function StatusBadge({ status, size = 'md' }) {
   const getStatusStyles = () => {
     switch (status) {
       case 'pending':

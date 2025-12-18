@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import Modal from '../../components/ui/Modal';
 import StatusBadge from '../../components/ui/StatusBadge';
+import EmployeeNotification from '../employee/Notification';
 import { Clock, CheckCircle, AlertCircle, Calendar } from 'lucide-react';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 export default function EmployeeDashboard() {
   const [showJobModal, setShowJobModal] = useState(false);
   const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [jobNotes, setJobNotes] = useState('');
 
   const myJobs = [
     { id: 1, title: 'Fix leaking pipe', unit: 'A-101', priority: 'high', status: 'in-progress' as const, assignedDate: '2025-11-18', dueDate: '2025-11-20' },
@@ -24,6 +26,7 @@ export default function EmployeeDashboard() {
 
   const handleViewJob = (job: any) => {
     setSelectedJob(job);
+    setJobNotes(''); // Clear notes for new selection
     setShowJobModal(true);
   };
 
@@ -46,7 +49,7 @@ export default function EmployeeDashboard() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1>My Jobs</h1>
+          <h1 className="text-2xl font-bold text-gray-900">My Jobs</h1> {/* ✅ FIXED: Added Styles */}
           <p className="text-gray-600 mt-1">View and manage your assigned tasks</p>
         </div>
 
@@ -56,8 +59,8 @@ export default function EmployeeDashboard() {
             <div className="flex items-center gap-3 mb-2">
               <Clock className="w-8 h-8 text-blue-600" />
               <div>
-                <p className="text-gray-600">Active Jobs</p>
-                <p className="text-gray-900">{myJobs.length}</p>
+                <p className="text-gray-600 text-sm">Active Jobs</p>
+                <p className="text-xl font-bold text-gray-900">{myJobs.length}</p>
               </div>
             </div>
           </div>
@@ -65,8 +68,8 @@ export default function EmployeeDashboard() {
             <div className="flex items-center gap-3 mb-2">
               <CheckCircle className="w-8 h-8 text-green-600" />
               <div>
-                <p className="text-gray-600">Completed This Week</p>
-                <p className="text-gray-900">{completedJobs.length}</p>
+                <p className="text-gray-600 text-sm">Completed</p>
+                <p className="text-xl font-bold text-gray-900">{completedJobs.length}</p>
               </div>
             </div>
           </div>
@@ -74,8 +77,8 @@ export default function EmployeeDashboard() {
             <div className="flex items-center gap-3 mb-2">
               <AlertCircle className="w-8 h-8 text-red-600" />
               <div>
-                <p className="text-gray-600">High Priority</p>
-                <p className="text-gray-900">{myJobs.filter(j => j.priority === 'high').length}</p>
+                <p className="text-gray-600 text-sm">High Priority</p>
+                <p className="text-xl font-bold text-gray-900">{myJobs.filter(j => j.priority === 'high').length}</p>
               </div>
             </div>
           </div>
@@ -84,27 +87,26 @@ export default function EmployeeDashboard() {
         {/* Active Jobs */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
-            <h2>Active Jobs</h2>
+            <h2 className="text-lg font-semibold">Active Jobs</h2>
           </div>
           <div className="divide-y divide-gray-200">
             {myJobs.map((job) => (
-              <div key={job.id} className="p-6 hover:bg-gray-50 cursor-pointer" onClick={() => handleViewJob(job)}>
+              <div key={job.id} className="p-6 hover:bg-gray-50 cursor-pointer transition-colors" onClick={() => handleViewJob(job)}>
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
-                    <h3 className="text-gray-900 mb-1">{job.title}</h3>
-                    <p className="text-gray-600">Unit {job.unit}</p>
+                    <h3 className="text-gray-900 font-medium mb-1">{job.title}</h3>
+                    <p className="text-sm text-gray-500">Unit {job.unit}</p>
                   </div>
-                  <span className={`px-3 py-1 rounded-full ${getPriorityColor(job.priority)} capitalize`}>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(job.priority)} capitalize`}>
                     {job.priority}
                   </span>
                 </div>
-                <div className="flex flex-wrap items-center gap-4 text-gray-600">
+                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
                   <StatusBadge status={job.status} size="sm" />
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
                     <span>Due: {job.dueDate}</span>
                   </div>
-                  <span>Assigned: {job.assignedDate}</span>
                 </div>
               </div>
             ))}
@@ -114,18 +116,18 @@ export default function EmployeeDashboard() {
         {/* Recently Completed */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200">
           <div className="p-6 border-b border-gray-200">
-            <h2>Recently Completed</h2>
+            <h2 className="text-lg font-semibold">Recently Completed</h2>
           </div>
           <div className="divide-y divide-gray-200">
             {completedJobs.map((job) => (
               <div key={job.id} className="p-6 flex items-center justify-between">
                 <div>
-                  <p className="text-gray-900 mb-1">{job.title}</p>
-                  <p className="text-gray-600">Unit {job.unit}</p>
+                  <p className="text-gray-900 font-medium mb-1">{job.title}</p>
+                  <p className="text-sm text-gray-500">Unit {job.unit}</p>
                 </div>
                 <div className="text-right">
                   <StatusBadge status="completed" size="sm" />
-                  <p className="text-gray-600 mt-1">{job.completedDate}</p>
+                  <p className="text-xs text-gray-400 mt-1">{job.completedDate}</p>
                 </div>
               </div>
             ))}
@@ -138,79 +140,73 @@ export default function EmployeeDashboard() {
         isOpen={showJobModal}
         onClose={() => setShowJobModal(false)}
         title="Job Details"
-        size="lg"
       >
         {selectedJob && (
           <div className="space-y-4">
             <div className="p-4 bg-gray-50 rounded-lg">
-              <h3 className="text-gray-900 mb-2">{selectedJob.title}</h3>
-              <p className="text-gray-600">Unit {selectedJob.unit}</p>
+              <h3 className="text-lg font-bold text-gray-900 mb-1">{selectedJob.title}</h3>
+              <p className="text-gray-600">Location: Unit {selectedJob.unit}</p>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-600 mb-1">Priority</label>
-                <span className={`inline-block px-3 py-1 rounded-full ${getPriorityColor(selectedJob.priority)} capitalize`}>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Priority</label>
+                <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${getPriorityColor(selectedJob.priority)} capitalize`}>
                   {selectedJob.priority}
                 </span>
               </div>
               <div>
-                <label className="block text-gray-600 mb-1">Current Status</label>
-                <StatusBadge status={selectedJob.status} />
-              </div>
-              <div>
-                <label className="block text-gray-600 mb-1">Assigned Date</label>
-                <p className="text-gray-900">{selectedJob.assignedDate}</p>
-              </div>
-              <div>
-                <label className="block text-gray-600 mb-1">Due Date</label>
-                <p className="text-gray-900">{selectedJob.dueDate}</p>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Due Date</label>
+                <p className="text-sm text-gray-900 font-medium">{selectedJob.dueDate}</p>
               </div>
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">Update Status</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Update Progress</label>
               <div className="flex gap-3">
                 {selectedJob.status === 'pending' && (
                   <button
                     onClick={() => handleUpdateStatus('in-progress')}
-                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors"
                   >
                     Start Job
                   </button>
                 )}
-                {selectedJob.status === 'in-progress' && (
-                  <button
-                    onClick={() => handleUpdateStatus('completed')}
-                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                  >
-                    Mark as Completed
-                  </button>
-                )}
+                <button
+                  onClick={() => handleUpdateStatus('completed')}
+                  className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition-colors"
+                >
+                  Mark as Completed
+                </button>
               </div>
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2">Add Notes</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Work Notes</label>
               <textarea
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                 rows={3}
-                placeholder="Add any notes or comments about this job..."
+                value={jobNotes} 
+                onChange={(e) => setJobNotes(e.target.value)} 
+                placeholder="Describe the work done or parts replaced..."
               />
             </div>
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-3 pt-4 border-t border-gray-100">
               <button
-                onClick={() => toast.success('Notes saved!')}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                onClick={() => {
+                  toast.success('Notes saved successfully!');
+                  setShowJobModal(false);
+                }}
+                className="flex-1 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-black font-medium transition-colors"
               >
-                Save Notes
+                Save & Exit
               </button>
               <button
                 onClick={() => setShowJobModal(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
               >
-                Close
+                Cancel
               </button>
             </div>
           </div>

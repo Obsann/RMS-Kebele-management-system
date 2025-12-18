@@ -12,10 +12,10 @@ export default function AdminDashboard() {
   ];
 
   const recentRequests = [
-    { id: 1, resident: 'John Smith', unit: 'A-101', type: 'Plumbing', status: 'pending' as const, date: '2025-11-18' },
-    { id: 2, resident: 'Sarah Johnson', unit: 'B-205', type: 'Electrical', status: 'in-progress' as const, date: '2025-11-18' },
-    { id: 3, resident: 'Mike Williams', unit: 'C-312', type: 'HVAC', status: 'completed' as const, date: '2025-11-17' },
-    { id: 4, resident: 'Emily Brown', unit: 'A-204', type: 'Maintenance', status: 'pending' as const, date: '2025-11-17' },
+    { id: 1, resident: 'John Smith', unit: 'A-101', type: 'Plumbing', status: 'pending', date: '2025-11-18' },
+    { id: 2, resident: 'Sarah Johnson', unit: 'B-205', type: 'Electrical', status: 'in-progress', date: '2025-11-18' },
+    { id: 3, resident: 'Mike Williams', unit: 'C-312', type: 'HVAC', status: 'completed', date: '2025-11-17' },
+    { id: 4, resident: 'Emily Brown', unit: 'A-204', type: 'Maintenance', status: 'pending', date: '2025-11-17' },
   ];
 
   const upcomingTasks = [
@@ -27,6 +27,7 @@ export default function AdminDashboard() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
+
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -60,6 +61,7 @@ export default function AdminDashboard() {
 
         {/* Main Grid */}
         <div className="grid lg:grid-cols-2 gap-6">
+
           {/* Recent Requests */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200">
             <div className="p-6 border-b border-gray-200">
@@ -104,10 +106,12 @@ export default function AdminDashboard() {
                     <p className="text-gray-600">Assigned to: {task.employee}</p>
                   </div>
                   <div className="text-right">
-                    <span className={`inline-block px-2 py-1 rounded text-white ${
-                      task.priority === 'High' ? 'bg-red-500' :
-                      task.priority === 'Medium' ? 'bg-yellow-500' : 'bg-green-500'
-                    }`}>
+                    <span
+                      className={`inline-block px-2 py-1 rounded text-white ${
+                        task.priority === 'High' ? 'bg-red-500' :
+                        task.priority === 'Medium' ? 'bg-yellow-500' : 'bg-green-500'
+                      }`}
+                    >
                       {task.priority}
                     </span>
                     <p className="text-gray-600 mt-1">{task.dueDate}</p>
@@ -125,6 +129,7 @@ export default function AdminDashboard() {
             <p className="text-gray-500">Activity chart visualization would go here</p>
           </div>
         </div>
+
       </div>
     </DashboardLayout>
   );

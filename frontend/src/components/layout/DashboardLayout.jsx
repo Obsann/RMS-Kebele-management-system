@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { AuthContext } from '../../App';
+import { AuthContext } from '../../context/AuthContext';
 import { 
   Building2, 
   LayoutDashboard, 
@@ -21,25 +21,14 @@ import {
   ClipboardList
 } from 'lucide-react';
 
-interface MenuItem {
-  label: string;
-  icon: React.ReactNode;
-  path: string;
-  roles?: string[];
-}
-
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-}
-
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default function DashboardLayout({ children }) {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const adminMenuItems: MenuItem[] = [
+  const adminMenuItems = [
     { label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" />, path: '/admin/dashboard' },
     { label: 'Residents', icon: <Users className="w-5 h-5" />, path: '/admin/residents' },
     { label: 'Employees', icon: <UserCog className="w-5 h-5" />, path: '/admin/employees' },
@@ -52,12 +41,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { label: 'Settings', icon: <Settings className="w-5 h-5" />, path: '/admin/settings' },
   ];
 
-  const employeeMenuItems: MenuItem[] = [
+  const employeeMenuItems = [
     { label: 'My Jobs', icon: <Briefcase className="w-5 h-5" />, path: '/employee/dashboard' },
     { label: 'Notifications', icon: <Bell className="w-5 h-5" />, path: '/employee/notifications' },
   ];
 
-  const residentMenuItems: MenuItem[] = [
+  const residentMenuItems = [
     { label: 'Dashboard', icon: <Home className="w-5 h-5" />, path: '/resident/dashboard' },
     { label: 'My Requests', icon: <ClipboardList className="w-5 h-5" />, path: '/resident/requests' },
     { label: 'Digital ID', icon: <IdCard className="w-5 h-5" />, path: '/resident/digital-id' },
@@ -66,7 +55,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const getMenuItems = () => {
     if (user?.role === 'admin') return adminMenuItems;
-    if (user?.role === 'special-employee') return adminMenuItems; // Special employees have similar access
+    if (user?.role === 'special-employee') return adminMenuItems;
     if (user?.role === 'employee') return employeeMenuItems;
     if (user?.role === 'resident') return residentMenuItems;
     return [];
@@ -81,11 +70,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Top Navbar */}
       <nav className="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Left Section */}
+
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -99,7 +87,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
             </div>
 
-            {/* Search Bar - Desktop */}
             {user?.role === 'admin' && (
               <div className="hidden md:block flex-1 max-w-2xl mx-8">
                 <div className="relative">
@@ -115,7 +102,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
             )}
 
-            {/* Right Section */}
             <div className="flex items-center gap-4">
               <button className="relative p-2 hover:bg-gray-100 rounded-lg">
                 <Bell className="w-6 h-6 text-gray-600" />
@@ -131,11 +117,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </nav>
 
-      {/* Sidebar */}
       <aside className={`
         fixed top-16 left-0 bottom-0 w-64 bg-white border-r border-gray-200 z-40 transition-transform duration-300
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -164,7 +150,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </button>
               );
             })}
-            
+
             <button
               onClick={handleLogout}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors mt-4"
@@ -176,14 +162,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="lg:pl-64 pt-16">
         <div className="p-4 sm:p-6 lg:p-8">
           {children}
         </div>
       </main>
 
-      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30 top-16"
