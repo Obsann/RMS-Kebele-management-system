@@ -145,12 +145,12 @@ export default function ResidentDashboard() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-gray-900">Emma Smith</span>
-                <span className="text-gray-600">Daughter, 8</span>
+                <span className="text-gray-900">Mulugeta Daba</span>
+                <span className="text-gray-600">Friend, 22</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-gray-900">Oliver Smith</span>
-                <span className="text-gray-600">Son, 5</span>
+                <span className="text-gray-900">Samuel Fayisa</span>
+                <span className="text-gray-600">Friend, 23</span>
               </div>
               <button
                 onClick={() => navigate('/resident/profile')}

@@ -49,7 +49,7 @@ export default function EmployeeDashboard() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Jobs</h1> {/* ✅ FIXED: Added Styles */}
+          <h1 className="text-2xl font-bold text-gray-900">My Jobs</h1> {/*  FIXED: Added Styles */}
           <p className="text-gray-600 mt-1">View and manage your assigned tasks</p>
         </div>
 

@@ -1,5 +1,20 @@
-node_modules
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment variables (NEVER commit secrets)
 .env
+
+# Uploads directory
+uploads/
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.dbv
 api.md
 dbSchema.md
 roleDefinition.md

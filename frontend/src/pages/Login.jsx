@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { Building2, Mail, Lock, UserCircle } from 'lucide-react';
+import { Building2, Mail, Lock, UserCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function Login() {
@@ -9,35 +9,40 @@ export default function Login() {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('resident');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!email || !password || !role) {
+
+    if (!email || !password) {
       toast.error('Please fill in all fields');
       return;
     }
 
-    // Call the login function from App.jsx
-    const success = login(email, password, role);
+    setIsLoading(true);
 
-    if (success) {
-      toast.success('Login successful!');
-      
-      // Navigate based on the selected role
-      if (role === 'admin') {
-        navigate('/admin/dashboard');
-      } else if (role === 'special-employee') {
-        navigate('/admin/jobs');
-      } else if (role === 'employee') {
-        navigate('/employee/dashboard');
-      } else if (role === 'resident') {
-        navigate('/resident/dashboard');
+    try {
+      const result = await login(email, password);
+
+      if (result.success) {
+        toast.success('Login successful!');
+
+        // Navigate based on the user's role
+        const roleRedirects = {
+          admin: '/admin/dashboard',
+          'special-employee': '/admin/jobs',
+          employee: '/employee/dashboard',
+          resident: '/resident/dashboard',
+        };
+
+        navigate(roleRedirects[result.user.role] || '/');
+      } else {
+        toast.error(result.error || 'Invalid credentials');
       }
-    } else {
-      // This will only run if login() returns false
-      toast.error('Invalid credentials');
+    } catch (error) {
+      toast.error(error.message || 'Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -48,6 +53,7 @@ export default function Login() {
           <div className="flex items-center justify-center mb-4">
             <Building2 className="w-12 h-12 text-blue-600" />
           </div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Resident Management System</h1>
           <p className="text-gray-600">Sign in to your account</p>
         </div>
 
@@ -64,6 +70,7 @@ export default function Login() {
                   className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="you@example.com"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -79,39 +86,40 @@ export default function Login() {
                   className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="••••••••"
                   required
+                  disabled={isLoading}
                 />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-gray-700 mb-2">Login As</label>
-              <div className="relative">
-                <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
-                >
-                  <option value="resident">Resident</option>
-                  <option value="employee">Employee</option>
-                  <option value="special-employee">Special Employee</option>
-                  <option value="admin">Administrator</option>
-                </select>
               </div>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              disabled={isLoading}
+              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Sign In
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
             </button>
           </form>
 
           <div className="mt-6 text-center space-y-2">
             <button
+              onClick={() => navigate('/forgot-password')}
+              className="text-blue-600 hover:text-blue-700 text-sm"
+              disabled={isLoading}
+            >
+              Forgot your password?
+            </button>
+            <br />
+            <button
               onClick={() => navigate('/register')}
               className="text-blue-600 hover:text-blue-700 text-sm"
+              disabled={isLoading}
             >
               Don't have an account? Register as Resident
             </button>
@@ -119,10 +127,17 @@ export default function Login() {
             <button
               onClick={() => navigate('/')}
               className="text-gray-600 hover:text-gray-700 text-sm"
+              disabled={isLoading}
             >
               Back to Home
             </button>
           </div>
+        </div>
+
+        {/* Demo credentials hint */}
+        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+          <p className="font-medium mb-2">Demo Account:</p>
+          <p>Create an admin account first, then use it to approve other registrations.</p>
         </div>
       </div>
     </div>

@@ -11,17 +11,17 @@ export default function ResidentProfile() {
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   const profile = {
-    name: 'Jane Doe',
-    email: 'jane.doe@email.com',
-    phone: '+1 555-0150',
+    name: 'Obsan Habtamu',
+    email: 'obsan@example.com',
+    phone: '+1 23456677',
     unit: 'A-101',
     moveInDate: '2024-01-15',
-    emergencyContact: 'John Doe - +1 555-0151',
+    emergencyContact: 'Habtamu Tefera - +1 555-0151',
   };
 
   const dependents = [
-    { id: 1, name: 'Emma Smith', relationship: 'Daughter', age: 8 },
-    { id: 2, name: 'Oliver Smith', relationship: 'Son', age: 5 },
+    { id: 1, name: 'Mulugeta Daba', relationship: 'Friend', age: 22 },
+    { id: 2, name: 'Samuel Fayisa', relationship: 'Friend', age: 23 }
   ];
 
   const certificates = [

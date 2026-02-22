@@ -1,24 +1,28 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { 
-  Building2, 
-  LayoutDashboard, 
-  Users, 
-  UserCog, 
-  UserCheck, 
-  Briefcase, 
-  MessageSquare, 
-  IdCard, 
-  Bell, 
-  FileText, 
-  Settings, 
+import NotificationBell from '../NotificationBell';
+import {
+  Building2,
+  LayoutDashboard,
+  Users,
+  UserCog,
+  UserCheck,
+  Briefcase,
+  MessageSquare,
+  IdCard,
+  Bell,
+  FileText,
+  Settings,
   LogOut,
   Menu,
   X,
   Search,
   Home,
-  ClipboardList
+  ClipboardList,
+  ShieldCheck,
+  BarChart3,
+  HouseIcon
 } from 'lucide-react';
 
 export default function DashboardLayout({ children }) {
@@ -36,13 +40,17 @@ export default function DashboardLayout({ children }) {
     { label: 'Job Management', icon: <Briefcase className="w-5 h-5" />, path: '/admin/jobs' },
     { label: 'Requests & Complaints', icon: <MessageSquare className="w-5 h-5" />, path: '/admin/requests' },
     { label: 'Digital ID System', icon: <IdCard className="w-5 h-5" />, path: '/admin/digital-id' },
+    { label: 'Households', icon: <HouseIcon className="w-5 h-5" />, path: '/admin/households' },
     { label: 'Notifications', icon: <Bell className="w-5 h-5" />, path: '/admin/notifications' },
-    { label: 'Reports', icon: <FileText className="w-5 h-5" />, path: '/admin/reports' },
-    { label: 'Settings', icon: <Settings className="w-5 h-5" />, path: '/admin/settings' },
+    { label: 'Reports & Analytics', icon: <BarChart3 className="w-5 h-5" />, path: '/admin/reports' },
+    { label: 'Audit Log', icon: <ShieldCheck className="w-5 h-5" />, path: '/admin/audit' },
   ];
 
   const employeeMenuItems = [
-    { label: 'My Jobs', icon: <Briefcase className="w-5 h-5" />, path: '/employee/dashboard' },
+    { label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" />, path: '/employee/dashboard' },
+    { label: 'My Jobs', icon: <Briefcase className="w-5 h-5" />, path: '/employee/jobs' },
+    { label: 'Service Requests', icon: <ClipboardList className="w-5 h-5" />, path: '/employee/requests' },
+    { label: 'ID Verification', icon: <IdCard className="w-5 h-5" />, path: '/employee/verify-id' },
     { label: 'Notifications', icon: <Bell className="w-5 h-5" />, path: '/employee/notifications' },
   ];
 
@@ -103,10 +111,7 @@ export default function DashboardLayout({ children }) {
             )}
 
             <div className="flex items-center gap-4">
-              <button className="relative p-2 hover:bg-gray-100 rounded-lg">
-                <Bell className="w-6 h-6 text-gray-600" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-              </button>
+              <NotificationBell />
               <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-gray-200">
                 <div className="text-right">
                   <p className="text-gray-900">{user?.name}</p>
@@ -139,8 +144,8 @@ export default function DashboardLayout({ children }) {
                   }}
                   className={`
                     w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
-                    ${isActive 
-                      ? 'bg-blue-50 text-blue-600' 
+                    ${isActive
+                      ? 'bg-blue-50 text-blue-600'
                       : 'text-gray-700 hover:bg-gray-50'
                     }
                   `}

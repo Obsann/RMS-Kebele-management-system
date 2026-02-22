@@ -5,7 +5,7 @@ import { toast } from 'sonner@2.0.3';
 
 export default function ResidentDigitalID() {
   const resident = {
-    name: 'Jane Doe',
+    name: 'Obsan Habtamu',
     unit: 'A-101',
     idNumber: 'RES-2024-0101',
     qrCode: 'QR-A101-JD',
