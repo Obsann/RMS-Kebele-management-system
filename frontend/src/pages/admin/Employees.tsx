@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
+import { AuthContext } from '../../context/AuthContext';
 import Modal from '../../components/ui/Modal';
 import StatusBadge from '../../components/ui/StatusBadge';
 import { Plus, Search, Filter, Eye, Edit } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
 
 export default function AdminEmployees() {
+  const { user } = useContext(AuthContext) as any;
+  const isSpecialEmployee = user?.role === 'special-employee';
   const [showAddModal, setShowAddModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
 
   const employees = [
-    { id: 1, name: 'John Martinez', email: 'john.m@pms.com', phone: '+1 555-0201', category: 'Plumbing', assignedJobs: 5, status: 'active' as const },
-    { id: 2, name: 'David Lee', email: 'david.l@pms.com', phone: '+1 555-0202', category: 'Electrical', assignedJobs: 3, status: 'active' as const },
-    { id: 3, name: 'Robert Chen', email: 'robert.c@pms.com', phone: '+1 555-0203', category: 'HVAC', assignedJobs: 7, status: 'active' as const },
-    { id: 4, name: 'Michael Brown', email: 'michael.b@pms.com', phone: '+1 555-0204', category: 'General Maintenance', assignedJobs: 4, status: 'active' as const },
-    { id: 5, name: 'James Wilson', email: 'james.w@pms.com', phone: '+1 555-0205', category: 'Landscaping', assignedJobs: 2, status: 'inactive' as const },
+    { id: 1, name: 'Abebe Kebede', email: 'abebe.k@pms.com', phone: '+1 555-0201', category: 'Plumbing', assignedJobs: 5, status: 'active' as const },
+    { id: 2, name: 'Dawit Tadesse', email: 'dawit.t@pms.com', phone: '+1 555-0202', category: 'Electrical', assignedJobs: 3, status: 'active' as const },
+    { id: 3, name: 'Robel Girma', email: 'robel.g@pms.com', phone: '+1 555-0203', category: 'HVAC', assignedJobs: 7, status: 'active' as const },
+    { id: 4, name: 'Mikael Alemu', email: 'mikael.a@pms.com', phone: '+1 555-0204', category: 'General Maintenance', assignedJobs: 4, status: 'active' as const },
+    { id: 5, name: 'Jemal Ahmed', email: 'jemal.a@pms.com', phone: '+1 555-0205', category: 'Landscaping', assignedJobs: 2, status: 'inactive' as const },
   ];
 
   const jobCategories = [
@@ -54,13 +57,15 @@ export default function AdminEmployees() {
             <h1>Employee Management</h1>
             <p className="text-gray-600 mt-1">Manage maintenance and service staff</p>
           </div>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-            Add Employee
-          </button>
+          {!isSpecialEmployee && (
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              Add Employee
+            </button>
+          )}
         </div>
 
         {/* Stats */}
@@ -147,9 +152,11 @@ export default function AdminEmployees() {
                         <button className="p-2 hover:bg-blue-50 rounded-lg text-blue-600" title="View Details">
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-600" title="Edit">
-                          <Edit className="w-4 h-4" />
-                        </button>
+                        {!isSpecialEmployee && (
+                          <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-600" title="Edit">
+                            <Edit className="w-4 h-4" />
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -186,7 +193,7 @@ export default function AdminEmployees() {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="John Doe"
+              placeholder="Abebe Kebede"
             />
           </div>
           <div>
@@ -196,7 +203,7 @@ export default function AdminEmployees() {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="john@pms.com"
+              placeholder="abebe@pms.com"
             />
           </div>
           <div>
