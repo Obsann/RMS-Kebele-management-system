@@ -10,24 +10,24 @@ export default function AdminSpecialEmployees() {
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
 
   const specialEmployees = [
-    { 
-      id: 1, 
-      name: 'Alice Johnson', 
-      email: 'alice.j@pms.com', 
+    {
+      id: 1,
+      name: 'Almaz Bekele',
+      email: 'almaz.b@pms.com',
       role: 'Senior Manager',
       permissions: ['manage-jobs', 'view-reports', 'manage-employees', 'approve-requests']
     },
-    { 
-      id: 2, 
-      name: 'Bob Williams', 
-      email: 'bob.w@pms.com', 
+    {
+      id: 2,
+      name: 'Bereket Tesfaye',
+      email: 'bereket.t@pms.com',
       role: 'Supervisor',
       permissions: ['manage-jobs', 'view-reports', 'approve-requests']
     },
-    { 
-      id: 3, 
-      name: 'Carol Davis', 
-      email: 'carol.d@pms.com', 
+    {
+      id: 3,
+      name: 'Chaltu Desalegn',
+      email: 'chaltu.d@pms.com',
       role: 'Coordinator',
       permissions: ['manage-jobs', 'view-reports']
     },
@@ -87,7 +87,7 @@ export default function AdminSpecialEmployees() {
           <div>
             <p className="text-gray-900 mb-1">About Special Employees</p>
             <p className="text-gray-600">
-              Special employees have elevated permissions to manage jobs, approve requests, and oversee operations. 
+              Special employees have elevated permissions to manage jobs, approve requests, and oversee operations.
               Configure their access level based on their responsibilities.
             </p>
           </div>
@@ -146,7 +146,7 @@ export default function AdminSpecialEmployees() {
             <input
               type="text"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="John Doe"
+              placeholder="Abebe Kebede"
             />
           </div>
           <div>
@@ -154,7 +154,7 @@ export default function AdminSpecialEmployees() {
             <input
               type="email"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="john@pms.com"
+              placeholder="almaz@pms.com"
             />
           </div>
           <div>
@@ -194,7 +194,7 @@ export default function AdminSpecialEmployees() {
       >
         <div className="space-y-4">
           <p className="text-gray-600">Select the permissions you want to grant to this employee:</p>
-          
+
           <div className="space-y-3">
             {allPermissions.map((permission) => (
               <div key={permission.id} className="flex items-start gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
