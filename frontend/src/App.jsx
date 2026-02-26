@@ -29,6 +29,7 @@ import ResidentDashboard from './pages/resident/Dashboard';
 import ResidentRequests from './pages/resident/Requests';
 import ResidentProfile from './pages/resident/Profile';
 import ResidentDigitalID from './pages/resident/DigitalID';
+import EmployeeNotifications from './pages/employee/Notifications';
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component {
@@ -80,7 +81,7 @@ function ProtectedRoute({ children, allowedRoles }) {
     // Redirect to appropriate dashboard based on role
     const roleRedirects = {
       admin: '/admin/dashboard',
-      'special-employee': '/admin/jobs',
+      'special-employee': '/admin/dashboard',
       employee: '/employee/dashboard',
       resident: '/resident/dashboard',
     };
@@ -178,7 +179,7 @@ function App() {
             <Route
               path="/admin/dashboard"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={['admin', 'special-employee']}>
                   <AdminDashboard />
                 </ProtectedRoute>
               }
@@ -186,7 +187,7 @@ function App() {
             <Route
               path="/admin/residents"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={['admin', 'special-employee']}>
                   <AdminResidents />
                 </ProtectedRoute>
               }
@@ -202,7 +203,7 @@ function App() {
             <Route
               path="/admin/employees"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={['admin', 'special-employee']}>
                   <AdminEmployees />
                 </ProtectedRoute>
               }
@@ -226,7 +227,7 @@ function App() {
             <Route
               path="/admin/requests"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={['admin', 'special-employee']}>
                   <AdminRequests />
                 </ProtectedRoute>
               }
@@ -234,7 +235,7 @@ function App() {
             <Route
               path="/admin/digital-id"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={['admin', 'special-employee']}>
                   <AdminDigitalID />
                 </ProtectedRoute>
               }
@@ -242,7 +243,7 @@ function App() {
             <Route
               path="/admin/notifications"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={['admin', 'special-employee']}>
                   <AdminNotifications />
                 </ProtectedRoute>
               }
@@ -258,7 +259,7 @@ function App() {
             <Route
               path="/admin/reports"
               element={
-                <ProtectedRoute allowedRoles={['admin']}>
+                <ProtectedRoute allowedRoles={['admin', 'special-employee']}>
                   <AdminReports />
                 </ProtectedRoute>
               }
@@ -302,6 +303,14 @@ function App() {
               element={
                 <ProtectedRoute allowedRoles={['employee']}>
                   <EmployeeIdVerification />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/employee/notifications"
+              element={
+                <ProtectedRoute allowedRoles={['employee']}>
+                  <EmployeeNotifications />
                 </ProtectedRoute>
               }
             />
