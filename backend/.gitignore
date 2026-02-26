@@ -11,11 +11,3 @@ uploads/
 # Logs
 logs/
 *.log
-
-# OS files
-.DS_Store
-Thumbs.dbv
-api.md
-dbSchema.md
-roleDefinition.md
-test.js
