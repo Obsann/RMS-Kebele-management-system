@@ -88,7 +88,7 @@ export default function Register() {
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="John Doe"
+                    placeholder="Abebe Kebede"
                     required
                     disabled={isLoading}
                   />
@@ -106,7 +106,7 @@ export default function Register() {
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="you@example.com"
+                    placeholder="abebe@example.com"
                     required
                     disabled={isLoading}
                   />
