@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import NotificationBell from '../NotificationBell';
+import LanguageSwitcher from '../LanguageSwitcher';
 import {
   Building2,
   LayoutDashboard,
@@ -62,8 +63,7 @@ export default function DashboardLayout({ children }) {
   ];
 
   const getMenuItems = () => {
-    if (user?.role === 'admin') return adminMenuItems;
-    if (user?.role === 'special-employee') return adminMenuItems;
+    if (user?.role === 'admin' || user?.role === 'special-employee') return adminMenuItems;
     if (user?.role === 'employee') return employeeMenuItems;
     if (user?.role === 'resident') return residentMenuItems;
     return [];
@@ -111,6 +111,7 @@ export default function DashboardLayout({ children }) {
             )}
 
             <div className="flex items-center gap-4">
+              <LanguageSwitcher />
               <NotificationBell />
               <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-gray-200">
                 <div className="text-right">
