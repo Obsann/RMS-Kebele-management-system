@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, Users, Briefcase, Home } from 'lucide-react';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 
 export default function Welcome() {
   const navigate = useNavigate();
@@ -10,6 +11,9 @@ export default function Welcome() {
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
+          <div className="flex justify-end mb-4">
+            <LanguageSwitcher />
+          </div>
           <div className="text-center mb-12">
             <div className="flex items-center justify-center mb-6">
               <Building2 className="w-16 h-16 text-blue-600" />
@@ -26,13 +30,13 @@ export default function Welcome() {
               <h3 className="mb-2">Resident Management</h3>
               <p className="text-gray-600">Manage residents, dependents, and digital IDs efficiently</p>
             </div>
-            
+
             <div className="bg-white rounded-xl p-6 shadow-sm">
               <Briefcase className="w-12 h-12 text-blue-600 mb-4" />
               <h3 className="mb-2">Job Tracking</h3>
               <p className="text-gray-600">Track maintenance jobs and employee assignments in real-time</p>
             </div>
-            
+
             <div className="bg-white rounded-xl p-6 shadow-sm">
               <Home className="w-12 h-12 text-blue-600 mb-4" />
               <h3 className="mb-2">Request System</h3>
