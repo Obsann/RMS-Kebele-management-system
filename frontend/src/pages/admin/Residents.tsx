@@ -13,11 +13,11 @@ export default function AdminResidents() {
   const [filterStatus, setFilterStatus] = useState('all');
 
   const residents = [
-    { id: 1, name: 'John Smith', email: 'john.smith@email.com', unit: 'A-101', phone: '+1 555-0101', status: 'active' as const, dependents: 2 },
-    { id: 2, name: 'Sarah Johnson', email: 'sarah.j@email.com', unit: 'B-205', phone: '+1 555-0102', status: 'active' as const, dependents: 1 },
-    { id: 3, name: 'Mike Williams', email: 'mike.w@email.com', unit: 'C-312', phone: '+1 555-0103', status: 'active' as const, dependents: 3 },
-    { id: 4, name: 'Emily Brown', email: 'emily.b@email.com', unit: 'A-204', phone: '+1 555-0104', status: 'inactive' as const, dependents: 0 },
-    { id: 5, name: 'David Lee', email: 'david.lee@email.com', unit: 'B-108', phone: '+1 555-0105', status: 'active' as const, dependents: 2 },
+    { id: 1, name: 'Yohannes Tekle', email: 'yohannes.t@email.com', unit: 'A-101', phone: '+1 555-0101', status: 'active' as const, dependents: 2 },
+    { id: 2, name: 'Sara Mamo', email: 'sara.m@email.com', unit: 'B-205', phone: '+1 555-0102', status: 'active' as const, dependents: 1 },
+    { id: 3, name: 'Mehari Gebre', email: 'mehari.g@email.com', unit: 'C-312', phone: '+1 555-0103', status: 'active' as const, dependents: 3 },
+    { id: 4, name: 'Emebet Tilahun', email: 'emebet.t@email.com', unit: 'A-204', phone: '+1 555-0104', status: 'inactive' as const, dependents: 0 },
+    { id: 5, name: 'Dawit Assefa', email: 'dawit.a@email.com', unit: 'B-108', phone: '+1 555-0105', status: 'active' as const, dependents: 2 },
   ];
 
   const [formData, setFormData] = useState({
@@ -175,7 +175,7 @@ export default function AdminResidents() {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="John Doe"
+              placeholder="Yohannes Tekle"
             />
           </div>
           <div>
@@ -185,7 +185,7 @@ export default function AdminResidents() {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="john@example.com"
+              placeholder="yohannes@example.com"
             />
           </div>
           <div>
