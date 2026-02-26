@@ -10,6 +10,7 @@ const EmployeeJobs = () => {
     const [statusFilter, setStatusFilter] = useState('');
     const [selectedJob, setSelectedJob] = useState(null);
     const [completionNotes, setCompletionNotes] = useState('');
+    const [appointmentDate, setAppointmentDate] = useState('');
     const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
 
     useEffect(() => {
@@ -36,12 +37,14 @@ const EmployeeJobs = () => {
             const updateData = { status };
             if (status === 'completed') {
                 updateData.completionNotes = completionNotes;
+                if (appointmentDate) updateData.appointmentDate = appointmentDate;
                 updateData.completedAt = new Date();
             }
             await jobsAPI.update(jobId, updateData);
             toast.success(`Job marked as ${status}`);
             setSelectedJob(null);
             setCompletionNotes('');
+            setAppointmentDate('');
             loadJobs();
         } catch (err) {
             toast.error('Failed to update job');
@@ -86,6 +89,17 @@ const EmployeeJobs = () => {
                     </div>
                     {selectedJob.status !== 'completed' && selectedJob.status !== 'cancelled' && (
                         <div>
+                            {selectedJob.category === 'Digital ID' && (
+                                <div className="form-group" style={{ marginBottom: '1rem' }}>
+                                    <label>Set Appointment Date for Resident</label>
+                                    <input
+                                        type="date"
+                                        value={appointmentDate}
+                                        onChange={e => setAppointmentDate(e.target.value)}
+                                        style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+                                    />
+                                </div>
+                            )}
                             <div className="form-group">
                                 <label>Completion Notes</label>
                                 <textarea value={completionNotes} onChange={e => setCompletionNotes(e.target.value)}
@@ -136,7 +150,11 @@ const EmployeeJobs = () => {
                                         <td>{job.unit || '—'}</td>
                                         <td>{job.dueDate ? new Date(job.dueDate).toLocaleDateString() : '—'}</td>
                                         <td>
-                                            <button className="btn btn-secondary btn-sm" onClick={() => { setSelectedJob(job); setCompletionNotes(''); }}>
+                                            <button className="btn btn-secondary btn-sm" onClick={() => {
+                                                setSelectedJob(job);
+                                                setCompletionNotes('');
+                                                setAppointmentDate('');
+                                            }}>
                                                 View
                                             </button>
                                         </td>
