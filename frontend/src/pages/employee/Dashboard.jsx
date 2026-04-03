@@ -7,32 +7,32 @@ import { toast } from 'sonner@2.0.3';
 
 export default function EmployeeDashboard() {
   const [showJobModal, setShowJobModal] = useState(false);
-  const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [selectedJob, setSelectedJob] = useState(null);
 
   const myJobs = [
-    { id: 1, title: 'Fix leaking pipe', unit: 'A-101', priority: 'high', status: 'in-progress' as const, assignedDate: '2025-11-18', dueDate: '2025-11-20' },
-    { id: 2, title: 'Replace ceiling fan', unit: 'B-305', priority: 'medium', status: 'pending' as const, assignedDate: '2025-11-19', dueDate: '2025-11-22' },
-    { id: 3, title: 'Install new outlet', unit: 'A-204', priority: 'medium', status: 'in-progress' as const, assignedDate: '2025-11-18', dueDate: '2025-11-21' },
-    { id: 4, title: 'AC maintenance checkup', unit: 'C-110', priority: 'low', status: 'pending' as const, assignedDate: '2025-11-19', dueDate: '2025-11-25' },
+    { id: 1, title: 'Fix leaking pipe', unit: 'A-101', priority: 'high', status: 'in-progress', assignedDate: '2026-02-24', dueDate: '2026-02-26', resident: 'Abebe Girma' },
+    { id: 2, title: 'Replace ceiling fan', unit: 'B-305', priority: 'medium', status: 'pending', assignedDate: '2026-02-25', dueDate: '2026-02-28', resident: 'Tigist Bekele' },
+    { id: 3, title: 'Install new outlet', unit: 'A-204', priority: 'medium', status: 'in-progress', assignedDate: '2026-02-24', dueDate: '2026-02-27', resident: 'Selamawit Tadesse' },
+    { id: 4, title: 'AC maintenance checkup', unit: 'C-110', priority: 'low', status: 'pending', assignedDate: '2026-02-25', dueDate: '2026-03-01', resident: 'Dawit Tesfaye' },
   ];
 
   const completedJobs = [
-    { id: 5, title: 'Fix door lock', unit: 'C-201', completedDate: '2025-11-17' },
-    { id: 6, title: 'Replace light bulbs', unit: 'B-108', completedDate: '2025-11-16' },
-    { id: 7, title: 'Repair window screen', unit: 'A-305', completedDate: '2025-11-15' },
+    { id: 5, title: 'Fix door lock', unit: 'C-201', completedDate: '2026-02-23', resident: 'Mekonnen Desta' },
+    { id: 6, title: 'Replace light bulbs', unit: 'B-108', completedDate: '2026-02-22', resident: 'Mulugeta Haile' },
+    { id: 7, title: 'Repair window screen', unit: 'A-305', completedDate: '2026-02-21', resident: 'Hiwot Mengistu' },
   ];
 
-  const handleViewJob = (job: any) => {
+  const handleViewJob = (job) => {
     setSelectedJob(job);
     setShowJobModal(true);
   };
 
-  const handleUpdateStatus = (status: string) => {
+  const handleUpdateStatus = (status) => {
     toast.success(`Job status updated to ${status}!`);
     setShowJobModal(false);
   };
 
-  const getPriorityColor = (priority: string) => {
+  const getPriorityColor = (priority) => {
     switch (priority) {
       case 'high': return 'text-red-600 bg-red-50';
       case 'medium': return 'text-yellow-600 bg-yellow-50';
@@ -75,7 +75,7 @@ export default function EmployeeDashboard() {
               <AlertCircle className="w-8 h-8 text-red-600" />
               <div>
                 <p className="text-gray-600">High Priority</p>
-                <p className="text-gray-900">{myJobs.filter(j => j.priority === 'high').length}</p>
+                <p className="text-gray-900">{myJobs.filter((j) => j.priority === 'high').length}</p>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@ export default function EmployeeDashboard() {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <h3 className="text-gray-900 mb-1">{job.title}</h3>
-                    <p className="text-gray-600">Unit {job.unit}</p>
+                    <p className="text-gray-600">Unit {job.unit} — {job.resident}</p>
                   </div>
                   <span className={`px-3 py-1 rounded-full ${getPriorityColor(job.priority)} capitalize`}>
                     {job.priority}
@@ -121,7 +121,7 @@ export default function EmployeeDashboard() {
               <div key={job.id} className="p-6 flex items-center justify-between">
                 <div>
                   <p className="text-gray-900 mb-1">{job.title}</p>
-                  <p className="text-gray-600">Unit {job.unit}</p>
+                  <p className="text-gray-600">Unit {job.unit} — {job.resident}</p>
                 </div>
                 <div className="text-right">
                   <StatusBadge status="completed" size="sm" />
@@ -145,6 +145,7 @@ export default function EmployeeDashboard() {
             <div className="p-4 bg-gray-50 rounded-lg">
               <h3 className="text-gray-900 mb-2">{selectedJob.title}</h3>
               <p className="text-gray-600">Unit {selectedJob.unit}</p>
+              <p className="text-gray-600">Resident: {selectedJob.resident}</p>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">

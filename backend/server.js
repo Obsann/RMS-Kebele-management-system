@@ -13,7 +13,6 @@ const requiredEnvVars = ['MONGO_URI', 'JWT_SECRET'];
 const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
 if (missingEnvVars.length > 0) {
   console.error('FATAL: Missing required environment variables:', missingEnvVars.join(', '));
-  console.error('Please check your .env file');
   process.exit(1);
 }
 
@@ -34,19 +33,12 @@ const { createAuditLog } = require('./middleware/auditMiddleware');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Security Middleware
+// --- MIDDLEWARE HIERARCHY ---
+
+// 1. Basic Security Headers
 app.use(helmet());
 
-// Sanitize data - prevent NoSQL injection
-app.use(mongoSanitize());
-
-// Connect to database
-connectDB().catch(err => {
-  console.error("Database connection failed:", err.message);
-  process.exit(1);
-});
-
-// CORS configuration
+// 2. CORS
 const corsOptions = {
   origin: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, 'http://localhost:5173', 'http://localhost:3000'] : ['http://localhost:3000', 'http://localhost:5173'],
   credentials: true,
@@ -55,17 +47,23 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// Body parsing middleware
+// 3. Body Parsing (Crucial: Must come before sanitization)
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Apply rate limiting to all API routes
+// 4. Data Sanitization (Now req.body/req.query are ready for filtering)
+app.use(mongoSanitize({
+  replaceWith: '_',
+}));
+
+// 5. Rate Limiting
 app.use('/api', apiLimiter);
 
-// NOTE: Uploaded files are served through authenticated API routes only
-// No public static serving of /uploads for security
+// 6. Database Connection
+connectDB();
 
-// Auto-audit middleware: logs all mutations (POST/PUT/PATCH/DELETE) 
+// --- LOGIC & ROUTES ---
+
 const autoAudit = (req, res, next) => {
   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method) && req.user) {
     const originalJson = res.json.bind(res);
@@ -90,7 +88,6 @@ const autoAudit = (req, res, next) => {
   next();
 };
 
-// Routes
 app.use('/api/auth', authRouter);
 app.use('/api/users', autoAudit, userRoute);
 app.use('/api/uploads', autoAudit, uploadRoute);
@@ -102,46 +99,19 @@ app.use('/api/notifications', autoAudit, notificationRoute);
 app.use('/api/households', autoAudit, householdRoute);
 app.use('/api/reports', reportRoute);
 
-// Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime()
-  });
+  res.json({ status: 'ok', timestamp: new Date().toISOString(), uptime: process.uptime() });
 });
 
-// Base route
-app.get('/', (req, res) => res.json({
-  message: 'RMS Kebele API is running',
-  version: '1.0.0',
-  endpoints: {
-    auth: '/api/auth',
-    users: '/api/users',
-    uploads: '/api/uploads',
-    requests: '/api/requests',
-    jobs: '/api/jobs',
-    digitalId: '/api/digital-id',
-    audit: '/api/audit',
-    notifications: '/api/notifications',
-    households: '/api/households',
-    reports: '/api/reports'
-  }
-}));
+app.get('/', (req, res) => res.json({ message: 'RMS Kebele API is running', version: '1.0.0' }));
 
-// 404 handler
+// Error Handlers
 app.use((req, res) => {
-  res.status(404).json({
-    error: 'Not Found',
-    message: `Route ${req.method} ${req.path} not found`
-  });
+  res.status(404).json({ error: 'Not Found', message: `Route ${req.method} ${req.path} not found` });
 });
 
-// Global error handler
 app.use((err, req, res, next) => {
   const logger = require('./config/logger');
-
-  // Log the error
   if (err.isOperational) {
     logger.warn(`${err.errorType}: ${err.message}`, { statusCode: err.statusCode, path: req.path });
   } else {
@@ -156,9 +126,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
 
-module.exports = app; // For testing
+module.exports = app;

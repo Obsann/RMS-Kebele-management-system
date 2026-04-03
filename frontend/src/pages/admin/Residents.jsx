@@ -13,19 +13,14 @@ export default function AdminResidents() {
   const [filterStatus, setFilterStatus] = useState('all');
 
   const residents = [
-    { id: 1, name: 'John Smith', email: 'john.smith@email.com', unit: 'A-101', phone: '+1 555-0101', status: 'active' as const, dependents: 2 },
-    { id: 2, name: 'Sarah Johnson', email: 'sarah.j@email.com', unit: 'B-205', phone: '+1 555-0102', status: 'active' as const, dependents: 1 },
-    { id: 3, name: 'Mike Williams', email: 'mike.w@email.com', unit: 'C-312', phone: '+1 555-0103', status: 'active' as const, dependents: 3 },
-    { id: 4, name: 'Emily Brown', email: 'emily.b@email.com', unit: 'A-204', phone: '+1 555-0104', status: 'inactive' as const, dependents: 0 },
-    { id: 5, name: 'David Lee', email: 'david.lee@email.com', unit: 'B-108', phone: '+1 555-0105', status: 'active' as const, dependents: 2 },
+    { id: 1, name: 'Abebe Girma', email: 'abebe.girma@email.com', unit: 'A-101', phone: '+251 911 234 567', status: 'active', dependents: 2 },
+    { id: 2, name: 'Tigist Bekele', email: 'tigist.bekele@email.com', unit: 'B-205', phone: '+251 922 345 678', status: 'active', dependents: 1 },
+    { id: 3, name: 'Mulugeta Haile', email: 'mulugeta.haile@email.com', unit: 'C-312', phone: '+251 933 456 789', status: 'active', dependents: 3 },
+    { id: 4, name: 'Selamawit Tadesse', email: 'selamawit.t@email.com', unit: 'A-204', phone: '+251 944 567 890', status: 'inactive', dependents: 0 },
+    { id: 5, name: 'Dawit Tesfaye', email: 'dawit.tesfaye@email.com', unit: 'B-108', phone: '+251 955 678 901', status: 'active', dependents: 2 },
   ];
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    unit: '',
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', unit: '' });
 
   const handleAddResident = () => {
     if (!formData.name || !formData.email || !formData.phone || !formData.unit) {
@@ -36,6 +31,15 @@ export default function AdminResidents() {
     setShowAddModal(false);
     setFormData({ name: '', email: '', phone: '', unit: '' });
   };
+
+  const filtered = residents.filter((r) => {
+    const matchSearch =
+      r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.unit.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchStatus = filterStatus === 'all' || r.status === filterStatus;
+    return matchSearch && matchStatus;
+  });
 
   return (
     <DashboardLayout>
@@ -55,7 +59,7 @@ export default function AdminResidents() {
           </button>
         </div>
 
-        {/* Filters and Search */}
+        {/* Filters */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 relative">
@@ -71,7 +75,7 @@ export default function AdminResidents() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -84,7 +88,7 @@ export default function AdminResidents() {
           </div>
         </div>
 
-        {/* Residents Table */}
+        {/* Table */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -100,7 +104,7 @@ export default function AdminResidents() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {residents.map((resident) => (
+                {filtered.map((resident) => (
                   <tr key={resident.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -126,16 +130,10 @@ export default function AdminResidents() {
                         >
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button
-                          className="p-2 hover:bg-gray-100 rounded-lg text-gray-600"
-                          title="Edit"
-                        >
+                        <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-600" title="Edit">
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button
-                          className="p-2 hover:bg-red-50 rounded-lg text-red-600"
-                          title="Delete"
-                        >
+                        <button className="p-2 hover:bg-red-50 rounded-lg text-red-600" title="Delete">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -145,10 +143,8 @@ export default function AdminResidents() {
               </tbody>
             </table>
           </div>
-
-          {/* Pagination */}
           <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-            <p className="text-gray-600">Showing 1 to 5 of 487 residents</p>
+            <p className="text-gray-600">Showing {filtered.length} of 487 residents</p>
             <div className="flex gap-2">
               <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Previous</button>
               <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">1</button>
@@ -161,12 +157,7 @@ export default function AdminResidents() {
       </div>
 
       {/* Add Resident Modal */}
-      <Modal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        title="Add New Resident"
-        size="md"
-      >
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add New Resident" size="md">
         <div className="space-y-4">
           <div>
             <label className="block text-gray-700 mb-2">Full Name</label>
@@ -175,7 +166,7 @@ export default function AdminResidents() {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="John Doe"
+              placeholder="ለምሳሌ፡ Abebe Girma"
             />
           </div>
           <div>
@@ -185,7 +176,7 @@ export default function AdminResidents() {
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="john@example.com"
+              placeholder="abebe@example.com"
             />
           </div>
           <div>
@@ -195,7 +186,7 @@ export default function AdminResidents() {
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="+1 555-0100"
+              placeholder="+251 9XX XXX XXX"
             />
           </div>
           <div>

@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import Modal from '../../components/ui/Modal';
 import StatusBadge from '../../components/ui/StatusBadge';
-import { QrCode, CheckCircle, XCircle, Download, Eye, Briefcase } from 'lucide-react';
-import { toast } from 'sonner';
+import { QrCode, CheckCircle, XCircle, Download, Eye } from 'lucide-react';
+import { toast } from 'sonner@2.0.3';
 
 export default function AdminDigitalID() {
   const [showQRModal, setShowQRModal] = useState(false);
   const [selectedResident, setSelectedResident] = useState<any>(null);
 
-  const [residentsList, setResidentsList] = useState([
-    { id: 1, name: 'Abebe Kebede', unit: 'A-101', idStatus: 'approved', qrCode: 'QR-A101-JD', lastVerified: '2025-11-15' },
-    { id: 2, name: 'Almaz Bekele', unit: 'B-205', idStatus: 'pending', qrCode: 'QR-B205-AB', lastVerified: '-' },
-    { id: 3, name: 'Yohannes Tekle', unit: 'C-312', idStatus: 'approved', qrCode: 'QR-C312-YT', lastVerified: '2025-11-10' },
-    { id: 4, name: 'Hanna Assefa', unit: 'A-204', idStatus: 'job_assigned', qrCode: 'QR-A204-HA', lastVerified: '-' },
-  ]);
+  const residents = [
+    { id: 1, name: 'John Smith', unit: 'A-101', idStatus: 'approved' as const, qrCode: 'QR-A101-JS', lastVerified: '2025-11-15' },
+    { id: 2, name: 'Sarah Johnson', unit: 'B-205', idStatus: 'pending' as const, qrCode: 'QR-B205-SJ', lastVerified: '-' },
+    { id: 3, name: 'Mike Williams', unit: 'C-312', idStatus: 'approved' as const, qrCode: 'QR-C312-MW', lastVerified: '2025-11-10' },
+    { id: 4, name: 'Emily Brown', unit: 'A-204', idStatus: 'approved' as const, qrCode: 'QR-A204-EB', lastVerified: '2025-11-18' },
+  ];
 
   const handleViewQR = (resident: any) => {
     setSelectedResident(resident);
@@ -22,12 +22,11 @@ export default function AdminDigitalID() {
   };
 
   const handleApprove = (id: number) => {
-    setResidentsList(prev => prev.map(r => r.id === id ? { ...r, idStatus: 'job_assigned' } : r));
-    toast.success('Job created and assigned to Special Employee!');
+    toast.success('Digital ID approved successfully!');
   };
 
   const handleReject = (id: number) => {
-    toast.error('Digital ID request rejected');
+    toast.error('Digital ID rejected');
   };
 
   return (
@@ -43,15 +42,15 @@ export default function AdminDigitalID() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <p className="text-gray-600 mb-1">Total Digital IDs</p>
-            <p className="text-gray-900">{residentsList.length}</p>
+            <p className="text-gray-900">{residents.length}</p>
           </div>
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
             <p className="text-gray-600 mb-1">Approved</p>
-            <p className="text-gray-900">{residentsList.filter(r => r.idStatus === 'approved').length}</p>
+            <p className="text-gray-900">{residents.filter(r => r.idStatus === 'approved').length}</p>
           </div>
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-            <p className="text-gray-600 mb-1">Pending Requests</p>
-            <p className="text-gray-900">{residentsList.filter(r => r.idStatus === 'pending').length}</p>
+            <p className="text-gray-600 mb-1">Pending Approval</p>
+            <p className="text-gray-900">{residents.filter(r => r.idStatus === 'pending').length}</p>
           </div>
         </div>
 
@@ -73,7 +72,7 @@ export default function AdminDigitalID() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {residentsList.map((resident) => (
+                {residents.map((resident) => (
                   <tr key={resident.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -86,13 +85,7 @@ export default function AdminDigitalID() {
                     <td className="px-6 py-4">{resident.unit}</td>
                     <td className="px-6 py-4 text-gray-600 font-mono">{resident.qrCode}</td>
                     <td className="px-6 py-4">
-                      {resident.idStatus === 'job_assigned' ? (
-                        <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
-                          Job Assigned
-                        </span>
-                      ) : (
-                        <StatusBadge status={resident.idStatus as any} size="sm" />
-                      )}
+                      <StatusBadge status={resident.idStatus} size="sm" />
                     </td>
                     <td className="px-6 py-4 text-gray-600">{resident.lastVerified}</td>
                     <td className="px-6 py-4">
@@ -108,10 +101,10 @@ export default function AdminDigitalID() {
                           <>
                             <button
                               onClick={() => handleApprove(resident.id)}
-                              className="p-2 hover:bg-green-50 rounded-lg text-green-600 flex items-center gap-1"
-                              title="Create Job & Assign to Special Employee"
+                              className="p-2 hover:bg-green-50 rounded-lg text-green-600"
+                              title="Approve"
                             >
-                              <Briefcase className="w-4 h-4" />
+                              <CheckCircle className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() => handleReject(resident.id)}
@@ -169,15 +162,15 @@ export default function AdminDigitalID() {
               <p className="mb-4">Property Management System</p>
               <h2 className="text-white mb-2">{selectedResident.name}</h2>
               <p className="text-blue-100">Unit {selectedResident.unit}</p>
-
+              
               {/* QR Code Placeholder */}
               <div className="bg-white rounded-lg p-6 mx-auto my-6 w-48 h-48 flex items-center justify-center">
                 <QrCode className="w-32 h-32 text-gray-400" />
               </div>
-
+              
               <p className="font-mono text-blue-100">{selectedResident.qrCode}</p>
             </div>
-
+            
             <div className="flex gap-3">
               <button
                 onClick={() => toast.success('Digital ID downloaded!')}

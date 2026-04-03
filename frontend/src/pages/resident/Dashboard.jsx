@@ -1,7 +1,7 @@
 import React from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { useNavigate } from 'react-router-dom';
-import { Wrench, MessageSquare, IdCard, User, FileText, Users, Home, TrendingUp } from 'lucide-react';
+import { Wrench, MessageSquare, IdCard, User, FileText, Users, Home } from 'lucide-react';
 import StatusBadge from '../../components/ui/StatusBadge';
 
 export default function ResidentDashboard() {
@@ -15,15 +15,15 @@ export default function ResidentDashboard() {
   ];
 
   const myRequests = [
-    { id: 1, type: 'maintenance', subject: 'Leaking pipe in kitchen', status: 'in-progress' as const, date: '2025-11-19' },
-    { id: 2, type: 'maintenance', subject: 'AC not cooling properly', status: 'pending' as const, date: '2025-11-18' },
-    { id: 3, type: 'complaint', subject: 'Noise from upstairs', status: 'pending' as const, date: '2025-11-17' },
+    { id: 1, type: 'maintenance', subject: 'Leaking pipe in kitchen', status: 'in-progress', date: '2026-02-24' },
+    { id: 2, type: 'maintenance', subject: 'AC not cooling properly', status: 'pending', date: '2026-02-23' },
+    { id: 3, type: 'complaint', subject: 'Noise from upstairs unit', status: 'pending', date: '2026-02-22' },
   ];
 
   const announcements = [
-    { id: 1, title: 'Pool Maintenance Schedule', date: '2025-11-19', content: 'Pool will be closed for maintenance on Nov 21-22' },
-    { id: 2, title: 'Parking Policy Update', date: '2025-11-18', content: 'New parking guidelines effective December 1st' },
-    { id: 3, title: 'Holiday Office Hours', date: '2025-11-15', content: 'Management office will be closed Nov 28-29' },
+    { id: 1, title: 'Water Supply Interruption', date: '2026-02-26', content: 'Water supply will be interrupted on Feb 28 from 8AM–12PM for maintenance.' },
+    { id: 2, title: 'Parking Policy Update', date: '2026-02-24', content: 'New parking guidelines are effective from March 1st. Please review the notice.' },
+    { id: 3, title: 'Holiday Office Hours', date: '2026-02-20', content: 'Management office will observe reduced hours during the upcoming public holiday.' },
   ];
 
   return (
@@ -31,7 +31,7 @@ export default function ResidentDashboard() {
       <div className="space-y-6">
         {/* Welcome Section */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-xl p-8">
-          <h1 className="text-white mb-2">Welcome Back!</h1>
+          <h1 className="text-white mb-2">እንኳን ደህና መጡ! — Welcome Back!</h1>
           <p className="text-blue-100">Your property management dashboard</p>
           <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div>
@@ -40,7 +40,7 @@ export default function ResidentDashboard() {
             </div>
             <div>
               <p className="text-blue-200">Active Requests</p>
-              <p className="text-white">{myRequests.filter(r => r.status !== 'completed').length}</p>
+              <p className="text-white">{myRequests.filter((r) => r.status !== 'completed').length}</p>
             </div>
             <div>
               <p className="text-blue-200">Dependents</p>
@@ -145,11 +145,11 @@ export default function ResidentDashboard() {
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-gray-900">Emma Smith</span>
+                <span className="text-gray-900">Selam Abebe</span>
                 <span className="text-gray-600">Daughter, 8</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-gray-900">Oliver Smith</span>
+                <span className="text-gray-900">Natnael Abebe</span>
                 <span className="text-gray-600">Son, 5</span>
               </div>
               <button

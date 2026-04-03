@@ -10,30 +10,16 @@ export default function AdminEmployees() {
   const [searchTerm, setSearchTerm] = useState('');
 
   const employees = [
-    { id: 1, name: 'John Martinez', email: 'john.m@pms.com', phone: '+1 555-0201', category: 'Plumbing', assignedJobs: 5, status: 'active' as const },
-    { id: 2, name: 'David Lee', email: 'david.l@pms.com', phone: '+1 555-0202', category: 'Electrical', assignedJobs: 3, status: 'active' as const },
-    { id: 3, name: 'Robert Chen', email: 'robert.c@pms.com', phone: '+1 555-0203', category: 'HVAC', assignedJobs: 7, status: 'active' as const },
-    { id: 4, name: 'Michael Brown', email: 'michael.b@pms.com', phone: '+1 555-0204', category: 'General Maintenance', assignedJobs: 4, status: 'active' as const },
-    { id: 5, name: 'James Wilson', email: 'james.w@pms.com', phone: '+1 555-0205', category: 'Landscaping', assignedJobs: 2, status: 'inactive' as const },
+    { id: 1, name: 'Yonas Kebede', email: 'yonas.k@pms.com', phone: '+251 911 111 001', category: 'Plumbing', assignedJobs: 5, status: 'active' },
+    { id: 2, name: 'Tesfaye Alemu', email: 'tesfaye.a@pms.com', phone: '+251 911 111 002', category: 'Electrical', assignedJobs: 3, status: 'active' },
+    { id: 3, name: 'Biruk Woldemariam', email: 'biruk.w@pms.com', phone: '+251 911 111 003', category: 'HVAC', assignedJobs: 7, status: 'active' },
+    { id: 4, name: 'Mekonnen Desta', email: 'mekonnen.d@pms.com', phone: '+251 911 111 004', category: 'General Maintenance', assignedJobs: 4, status: 'active' },
+    { id: 5, name: 'Getachew Lemma', email: 'getachew.l@pms.com', phone: '+251 911 111 005', category: 'Landscaping', assignedJobs: 2, status: 'inactive' },
   ];
 
-  const jobCategories = [
-    'Plumbing',
-    'Electrical',
-    'HVAC',
-    'General Maintenance',
-    'Landscaping',
-    'Cleaning',
-    'Security',
-    'Carpentry',
-  ];
+  const jobCategories = ['Plumbing', 'Electrical', 'HVAC', 'General Maintenance', 'Landscaping', 'Cleaning', 'Security', 'Carpentry'];
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    category: '',
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', phone: '', category: '' });
 
   const handleAddEmployee = () => {
     if (!formData.name || !formData.email || !formData.phone || !formData.category) {
@@ -44,6 +30,12 @@ export default function AdminEmployees() {
     setShowAddModal(false);
     setFormData({ name: '', email: '', phone: '', category: '' });
   };
+
+  const filtered = employees.filter((e) =>
+    e.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    e.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    e.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <DashboardLayout>
@@ -94,9 +86,7 @@ export default function AdminEmployees() {
             </div>
             <select className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="">All Categories</option>
-              {jobCategories.map((category, idx) => (
-                <option key={idx} value={category}>{category}</option>
-              ))}
+              {jobCategories.map((cat, idx) => <option key={idx} value={cat}>{cat}</option>)}
             </select>
             <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
               <Filter className="w-5 h-5" />
@@ -105,7 +95,7 @@ export default function AdminEmployees() {
           </div>
         </div>
 
-        {/* Employees Table */}
+        {/* Table */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -121,7 +111,7 @@ export default function AdminEmployees() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {employees.map((employee) => (
+                {filtered.map((employee) => (
                   <tr key={employee.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -134,22 +124,14 @@ export default function AdminEmployees() {
                     <td className="px-6 py-4 text-gray-600">{employee.email}</td>
                     <td className="px-6 py-4 text-gray-600">{employee.phone}</td>
                     <td className="px-6 py-4">
-                      <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
-                        {employee.category}
-                      </span>
+                      <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full">{employee.category}</span>
                     </td>
                     <td className="px-6 py-4">{employee.assignedJobs}</td>
-                    <td className="px-6 py-4">
-                      <StatusBadge status={employee.status} size="sm" />
-                    </td>
+                    <td className="px-6 py-4"><StatusBadge status={employee.status} size="sm" /></td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <button className="p-2 hover:bg-blue-50 rounded-lg text-blue-600" title="View Details">
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-600" title="Edit">
-                          <Edit className="w-4 h-4" />
-                        </button>
+                        <button className="p-2 hover:bg-blue-50 rounded-lg text-blue-600" title="View Details"><Eye className="w-4 h-4" /></button>
+                        <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-600" title="Edit"><Edit className="w-4 h-4" /></button>
                       </div>
                     </td>
                   </tr>
@@ -157,10 +139,8 @@ export default function AdminEmployees() {
               </tbody>
             </table>
           </div>
-
-          {/* Pagination */}
           <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-            <p className="text-gray-600">Showing 1 to 5 of 52 employees</p>
+            <p className="text-gray-600">Showing 1 to {filtered.length} of 52 employees</p>
             <div className="flex gap-2">
               <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Previous</button>
               <button className="px-4 py-2 bg-blue-600 text-white rounded-lg">1</button>
@@ -172,69 +152,30 @@ export default function AdminEmployees() {
       </div>
 
       {/* Add Employee Modal */}
-      <Modal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        title="Add New Employee"
-        size="md"
-      >
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add New Employee" size="md">
         <div className="space-y-4">
           <div>
             <label className="block text-gray-700 mb-2">Full Name</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="John Doe"
-            />
+            <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ለምሳሌ፡ Yonas Kebede" />
           </div>
           <div>
             <label className="block text-gray-700 mb-2">Email</label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="john@pms.com"
-            />
+            <input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="yonas@pms.com" />
           </div>
           <div>
             <label className="block text-gray-700 mb-2">Phone</label>
-            <input
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="+1 555-0100"
-            />
+            <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="+251 9XX XXX XXX" />
           </div>
           <div>
             <label className="block text-gray-700 mb-2">Job Category</label>
-            <select
-              value={formData.category}
-              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
+            <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option value="">Select Category</option>
-              {jobCategories.map((category, idx) => (
-                <option key={idx} value={category}>{category}</option>
-              ))}
+              {jobCategories.map((cat, idx) => <option key={idx} value={cat}>{cat}</option>)}
             </select>
           </div>
           <div className="flex gap-3 pt-4">
-            <button
-              onClick={handleAddEmployee}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            >
-              Add Employee
-            </button>
-            <button
-              onClick={() => setShowAddModal(false)}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              Cancel
-            </button>
+            <button onClick={handleAddEmployee} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Add Employee</button>
+            <button onClick={() => setShowAddModal(false)} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
           </div>
         </div>
       </Modal>

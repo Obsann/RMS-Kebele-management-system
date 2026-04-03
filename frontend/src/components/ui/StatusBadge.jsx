@@ -7,6 +7,8 @@ export default function StatusBadge({ status, size = 'md' }) {
         return 'bg-yellow-100 text-yellow-800';
       case 'in-progress':
         return 'bg-blue-100 text-blue-800';
+      case 'in_progress':
+        return 'bg-blue-100 text-blue-800';
       case 'completed':
         return 'bg-green-100 text-green-800';
       case 'approved':
@@ -24,9 +26,11 @@ export default function StatusBadge({ status, size = 'md' }) {
 
   const sizeClass = size === 'sm' ? 'px-2 py-1' : 'px-3 py-1';
 
+  const displayLabel = (status || '').replace(/_/g, ' ').replace(/-/g, ' ');
+
   return (
     <span className={`inline-flex items-center rounded-full ${getStatusStyles()} ${sizeClass} capitalize`}>
-      {status.replace('-', ' ')}
+      {displayLabel}
     </span>
   );
 }

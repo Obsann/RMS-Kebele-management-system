@@ -1,143 +1,139 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { Building2, Mail, Lock, UserCircle, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { AuthContext } from '../App';
+import { Building2, Mail, Lock, UserCircle, Globe } from 'lucide-react';
+import { toast } from 'sonner@2.0.3';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
+  const { t, toggleLanguage } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [role, setRole] = useState('resident');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!email || !password || !role) {
       toast.error('Please fill in all fields');
       return;
     }
 
-    setIsLoading(true);
-
-    try {
-      const result = await login(email, password);
-
-      if (result.success) {
-        toast.success('Login successful!');
-
-        // Navigate based on the user's role
-        const roleRedirects = {
-          admin: '/admin/dashboard',
-          'special-employee': '/admin/jobs',
-          employee: '/employee/dashboard',
-          resident: '/resident/dashboard',
-        };
-
-        navigate(roleRedirects[result.user.role] || '/');
-      } else {
-        toast.error(result.error || 'Invalid credentials');
-      }
-    } catch (error) {
-      toast.error(error.message || 'Login failed. Please try again.');
-    } finally {
-      setIsLoading(false);
+    const success = login(email, password, role);
+    if (success) {
+      toast.success('Login successful!');
+      if (role === 'admin') navigate('/admin/dashboard');
+      else if (role === 'special-employee') navigate('/special-employee/dashboard');
+      else if (role === 'employee') navigate('/employee/dashboard');
+      else if (role === 'resident') navigate('/resident/dashboard');
+    } else {
+      toast.error('Invalid credentials');
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <Building2 className="w-12 h-12 text-blue-600" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Resident Management System</h1>
-          <p className="text-gray-600">Sign in to your account</p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col">
+      {/* Language toggle — top right */}
+      <div className="flex justify-end px-6 pt-4">
+        <button
+          onClick={toggleLanguage}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-300 bg-white text-blue-700 hover:bg-blue-50 transition-colors shadow-sm"
+        >
+          <Globe className="w-4 h-4" />
+          <span>{t('switchLanguage')}</span>
+        </button>
+      </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-gray-700 mb-2">Email Address</label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="you@example.com"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
+      <div className="flex-1 flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center mb-4">
+              <Building2 className="w-12 h-12 text-blue-600" />
             </div>
-
-            <div>
-              <label className="block text-gray-700 mb-2">Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="••••••••"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                'Sign In'
-              )}
-            </button>
-          </form>
-
-          <div className="mt-6 text-center space-y-2">
-            <button
-              onClick={() => navigate('/forgot-password')}
-              className="text-blue-600 hover:text-blue-700 text-sm"
-              disabled={isLoading}
-            >
-              Forgot your password?
-            </button>
-            <br />
-            <button
-              onClick={() => navigate('/register')}
-              className="text-blue-600 hover:text-blue-700 text-sm"
-              disabled={isLoading}
-            >
-              Don't have an account? Register as Resident
-            </button>
-            <br />
-            <button
-              onClick={() => navigate('/')}
-              className="text-gray-600 hover:text-gray-700 text-sm"
-              disabled={isLoading}
-            >
-              Back to Home
-            </button>
+            <h1 className="text-blue-800 mb-2">{t('signIn')}</h1>
+            <p className="text-gray-600">{t('signInSubtitle')}</p>
           </div>
-        </div>
 
-        {/* Demo credentials hint */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-          <p className="font-medium mb-2">Demo Account:</p>
-          <p>Create an admin account first, then use it to approve other registrations.</p>
+          {/* Login Form */}
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Email */}
+              <div>
+                <label className="block text-gray-700 mb-2">{t('emailAddress')}</label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="you@example.com"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-gray-700 mb-2">{t('password')}</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+
+              {/* Role Selection */}
+              <div>
+                <label className="block text-gray-700 mb-2">{t('loginAs')}</label>
+                <div className="relative">
+                  <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <select
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                  >
+                    <option value="resident">Resident / ነዋሪ</option>
+                    <option value="employee">Employee / ሠራተኛ</option>
+                    <option value="special-employee">Special Employee / ልዩ ሠራተኛ</option>
+                    <option value="admin">Administrator / አስተዳዳሪ</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                {t('signIn')}
+              </button>
+            </form>
+
+            {/* Links */}
+            <div className="mt-6 text-center space-y-2">
+              <button
+                onClick={() => navigate('/register')}
+                className="text-blue-600 hover:text-blue-700"
+              >
+                {t('noAccount')}
+              </button>
+              <br />
+              <button
+                onClick={() => navigate('/')}
+                className="text-gray-600 hover:text-gray-700"
+              >
+                {t('backToHome')}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

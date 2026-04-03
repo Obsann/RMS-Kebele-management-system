@@ -1,13 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
-import { AuthContext } from '../../context/AuthContext';
 import Modal from '../../components/ui/Modal';
 import { Plus, Calendar, User, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner@2.0.3';
 
 export default function AdminJobs() {
-  const { user } = useContext(AuthContext) as any;
-  const isSpecialEmployee = user?.role === 'special-employee';
   const [showCreateJobModal, setShowCreateJobModal] = useState(false);
 
   const jobs = {
@@ -212,7 +209,7 @@ export default function AdminJobs() {
               placeholder="e.g., Fix leaking pipe"
             />
           </div>
-
+          
           <div>
             <label className="block text-gray-700 mb-2">Description</label>
             <textarea
@@ -274,19 +271,10 @@ export default function AdminJobs() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Assign Later</option>
-                {!isSpecialEmployee ? (
-                  <>
-                    <option value="Samuel Tadesse">Samuel Tadesse (Special Emp)</option>
-                    <option value="Hanna Assefa">Hanna Assefa (Special Emp)</option>
-                  </>
-                ) : (
-                  <>
-                    <option value="Abebe Kebede">Abebe Kebede</option>
-                    <option value="Dawit Tadesse">Dawit Tadesse</option>
-                    <option value="Robel Girma">Robel Girma</option>
-                    <option value="Mikael Alemu">Mikael Alemu</option>
-                  </>
-                )}
+                <option value="John Martinez">John Martinez</option>
+                <option value="David Lee">David Lee</option>
+                <option value="Robert Chen">Robert Chen</option>
+                <option value="Michael Brown">Michael Brown</option>
               </select>
             </div>
           </div>

@@ -7,29 +7,29 @@ import { toast } from 'sonner@2.0.3';
 export default function AdminSpecialEmployees() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const specialEmployees = [
-    { 
-      id: 1, 
-      name: 'Alice Johnson', 
-      email: 'alice.j@pms.com', 
+    {
+      id: 1,
+      name: 'Hiwot Mengistu',
+      email: 'hiwot.m@pms.com',
       role: 'Senior Manager',
-      permissions: ['manage-jobs', 'view-reports', 'manage-employees', 'approve-requests']
+      permissions: ['manage-jobs', 'view-reports', 'manage-employees', 'approve-requests'],
     },
-    { 
-      id: 2, 
-      name: 'Bob Williams', 
-      email: 'bob.w@pms.com', 
+    {
+      id: 2,
+      name: 'Temesgen Alemu',
+      email: 'temesgen.a@pms.com',
       role: 'Supervisor',
-      permissions: ['manage-jobs', 'view-reports', 'approve-requests']
+      permissions: ['manage-jobs', 'view-reports', 'approve-requests'],
     },
-    { 
-      id: 3, 
-      name: 'Carol Davis', 
-      email: 'carol.d@pms.com', 
+    {
+      id: 3,
+      name: 'Mekdes Haile',
+      email: 'mekdes.h@pms.com',
       role: 'Coordinator',
-      permissions: ['manage-jobs', 'view-reports']
+      permissions: ['manage-jobs', 'view-reports'],
     },
   ];
 
@@ -42,9 +42,9 @@ export default function AdminSpecialEmployees() {
     { id: 'digital-id-approval', label: 'Digital ID Approval', description: 'Approve digital ID certificates' },
   ];
 
-  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
 
-  const handleManagePermissions = (employee: any) => {
+  const handleManagePermissions = (employee) => {
     setSelectedEmployee(employee);
     setSelectedPermissions(employee.permissions);
     setShowPermissionsModal(true);
@@ -55,12 +55,10 @@ export default function AdminSpecialEmployees() {
     setShowPermissionsModal(false);
   };
 
-  const togglePermission = (permId: string) => {
-    if (selectedPermissions.includes(permId)) {
-      setSelectedPermissions(selectedPermissions.filter(p => p !== permId));
-    } else {
-      setSelectedPermissions([...selectedPermissions, permId]);
-    }
+  const togglePermission = (permId) => {
+    setSelectedPermissions((prev) =>
+      prev.includes(permId) ? prev.filter((p) => p !== permId) : [...prev, permId]
+    );
   };
 
   return (
@@ -87,7 +85,7 @@ export default function AdminSpecialEmployees() {
           <div>
             <p className="text-gray-900 mb-1">About Special Employees</p>
             <p className="text-gray-600">
-              Special employees have elevated permissions to manage jobs, approve requests, and oversee operations. 
+              Special employees have elevated permissions to manage jobs, approve requests, and oversee operations.
               Configure their access level based on their responsibilities.
             </p>
           </div>
@@ -117,13 +115,12 @@ export default function AdminSpecialEmployees() {
                 </button>
               </div>
 
-              {/* Permissions Preview */}
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-gray-600 mb-2">Current Permissions:</p>
                 <div className="flex flex-wrap gap-2">
                   {employee.permissions.map((perm, idx) => (
                     <span key={idx} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
-                      {allPermissions.find(p => p.id === perm)?.label || perm}
+                      {allPermissions.find((p) => p.id === perm)?.label || perm}
                     </span>
                   ))}
                 </div>
@@ -134,67 +131,31 @@ export default function AdminSpecialEmployees() {
       </div>
 
       {/* Add Special Employee Modal */}
-      <Modal
-        isOpen={showAddModal}
-        onClose={() => setShowAddModal(false)}
-        title="Add Special Employee"
-        size="md"
-      >
+      <Modal isOpen={showAddModal} onClose={() => setShowAddModal(false)} title="Add Special Employee" size="md">
         <div className="space-y-4">
           <div>
             <label className="block text-gray-700 mb-2">Full Name</label>
-            <input
-              type="text"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="John Doe"
-            />
+            <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ለምሳሌ፡ Hiwot Mengistu" />
           </div>
           <div>
             <label className="block text-gray-700 mb-2">Email</label>
-            <input
-              type="email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="john@pms.com"
-            />
+            <input type="email" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="hiwot@pms.com" />
           </div>
           <div>
             <label className="block text-gray-700 mb-2">Role/Title</label>
-            <input
-              type="text"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Manager, Supervisor, etc."
-            />
+            <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Manager, Supervisor, etc." />
           </div>
           <div className="flex gap-3 pt-4">
-            <button
-              onClick={() => {
-                toast.success('Special employee added!');
-                setShowAddModal(false);
-              }}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            >
-              Add Employee
-            </button>
-            <button
-              onClick={() => setShowAddModal(false)}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              Cancel
-            </button>
+            <button onClick={() => { toast.success('Special employee added!'); setShowAddModal(false); }} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Add Employee</button>
+            <button onClick={() => setShowAddModal(false)} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
           </div>
         </div>
       </Modal>
 
       {/* Manage Permissions Modal */}
-      <Modal
-        isOpen={showPermissionsModal}
-        onClose={() => setShowPermissionsModal(false)}
-        title={`Manage Permissions - ${selectedEmployee?.name}`}
-        size="lg"
-      >
+      <Modal isOpen={showPermissionsModal} onClose={() => setShowPermissionsModal(false)} title={`Manage Permissions — ${selectedEmployee?.name}`} size="lg">
         <div className="space-y-4">
           <p className="text-gray-600">Select the permissions you want to grant to this employee:</p>
-          
           <div className="space-y-3">
             {allPermissions.map((permission) => (
               <div key={permission.id} className="flex items-start gap-3 p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
@@ -212,20 +173,9 @@ export default function AdminSpecialEmployees() {
               </div>
             ))}
           </div>
-
           <div className="flex gap-3 pt-4">
-            <button
-              onClick={handleSavePermissions}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            >
-              Save Permissions
-            </button>
-            <button
-              onClick={() => setShowPermissionsModal(false)}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-            >
-              Cancel
-            </button>
+            <button onClick={handleSavePermissions} className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save Permissions</button>
+            <button onClick={() => setShowPermissionsModal(false)} className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
           </div>
         </div>
       </Modal>

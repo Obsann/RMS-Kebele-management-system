@@ -11,23 +11,23 @@ export default function ResidentProfile() {
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   const profile = {
-    name: 'Jane Doe',
-    email: 'jane.doe@email.com',
-    phone: '+1 555-0150',
+    name: 'Abebe Girma',
+    email: 'abebe.girma@email.com',
+    phone: '+251 911 234 567',
     unit: 'A-101',
     moveInDate: '2024-01-15',
-    emergencyContact: 'John Doe - +1 555-0151',
+    emergencyContact: 'Kebede Girma — +251 911 234 999',
   };
 
   const dependents = [
-    { id: 1, name: 'Emma Smith', relationship: 'Daughter', age: 8 },
-    { id: 2, name: 'Oliver Smith', relationship: 'Son', age: 5 },
+    { id: 1, name: 'Selam Abebe', relationship: 'Daughter', age: 8 },
+    { id: 2, name: 'Natnael Abebe', relationship: 'Son', age: 5 },
   ];
 
   const certificates = [
-    { id: 1, type: 'ID Card', status: 'approved' as const, uploadDate: '2024-01-15' },
-    { id: 2, type: 'Proof of Address', status: 'approved' as const, uploadDate: '2024-01-15' },
-    { id: 3, type: 'Employment Letter', status: 'pending' as const, uploadDate: '2025-11-18' },
+    { id: 1, type: 'Kebele ID Card', status: 'approved', uploadDate: '2024-01-15' },
+    { id: 2, type: 'Proof of Address', status: 'approved', uploadDate: '2024-01-15' },
+    { id: 3, type: 'Employment Letter', status: 'pending', uploadDate: '2026-02-20' },
   ];
 
   return (
@@ -76,36 +76,23 @@ export default function ResidentProfile() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200">
           <div className="border-b border-gray-200">
             <div className="flex gap-8 px-6">
-              <button
-                onClick={() => setActiveTab('personal')}
-                className={`py-4 border-b-2 transition-colors ${
-                  activeTab === 'personal'
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Personal Information
-              </button>
-              <button
-                onClick={() => setActiveTab('dependents')}
-                className={`py-4 border-b-2 transition-colors ${
-                  activeTab === 'dependents'
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Dependents
-              </button>
-              <button
-                onClick={() => setActiveTab('certificates')}
-                className={`py-4 border-b-2 transition-colors ${
-                  activeTab === 'certificates'
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Certificates
-              </button>
+              {[
+                { key: 'personal', label: 'Personal Information' },
+                { key: 'dependents', label: 'Dependents' },
+                { key: 'certificates', label: 'Certificates' },
+              ].map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => setActiveTab(key)}
+                  className={`py-4 border-b-2 transition-colors ${
+                    activeTab === key
+                      ? 'border-blue-600 text-blue-600'
+                      : 'border-transparent text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -252,7 +239,7 @@ export default function ResidentProfile() {
             <input
               type="text"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter name"
+              placeholder="ለምሳሌ፡ Liya Abebe"
             />
           </div>
           <div>
@@ -304,7 +291,7 @@ export default function ResidentProfile() {
           <div>
             <label className="block text-gray-700 mb-2">Certificate Type</label>
             <select className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option>ID Card</option>
+              <option>Kebele ID Card</option>
               <option>Proof of Address</option>
               <option>Employment Letter</option>
               <option>Bank Statement</option>

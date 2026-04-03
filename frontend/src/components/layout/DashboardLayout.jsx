@@ -1,8 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
-import NotificationBell from '../NotificationBell';
-import LanguageSwitcher from '../LanguageSwitcher';
+import { AuthContext } from '../../App';
+import { useLanguage } from '../../contexts/LanguageContext';
 import {
   Building2,
   LayoutDashboard,
@@ -21,49 +20,56 @@ import {
   Search,
   Home,
   ClipboardList,
-  ShieldCheck,
-  BarChart3,
-  HouseIcon
+  Globe,
+  Lock,
 } from 'lucide-react';
 
 export default function DashboardLayout({ children }) {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const { t, lang, toggleLanguage } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const adminMenuItems = [
-    { label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" />, path: '/admin/dashboard' },
-    { label: 'Residents', icon: <Users className="w-5 h-5" />, path: '/admin/residents' },
-    { label: 'Employees', icon: <UserCog className="w-5 h-5" />, path: '/admin/employees' },
-    { label: 'Special Employees', icon: <UserCheck className="w-5 h-5" />, path: '/admin/special-employees' },
-    { label: 'Job Management', icon: <Briefcase className="w-5 h-5" />, path: '/admin/jobs' },
-    { label: 'Requests & Complaints', icon: <MessageSquare className="w-5 h-5" />, path: '/admin/requests' },
-    { label: 'Digital ID System', icon: <IdCard className="w-5 h-5" />, path: '/admin/digital-id' },
-    { label: 'Households', icon: <HouseIcon className="w-5 h-5" />, path: '/admin/households' },
-    { label: 'Notifications', icon: <Bell className="w-5 h-5" />, path: '/admin/notifications' },
-    { label: 'Reports & Analytics', icon: <BarChart3 className="w-5 h-5" />, path: '/admin/reports' },
-    { label: 'Audit Log', icon: <ShieldCheck className="w-5 h-5" />, path: '/admin/audit' },
+    { labelKey: 'dashboard', icon: <LayoutDashboard className="w-5 h-5" />, path: '/admin/dashboard' },
+    { labelKey: 'residents', icon: <Users className="w-5 h-5" />, path: '/admin/residents' },
+    { labelKey: 'employees', icon: <UserCog className="w-5 h-5" />, path: '/admin/employees' },
+    { labelKey: 'specialEmployees', icon: <UserCheck className="w-5 h-5" />, path: '/admin/special-employees' },
+    { labelKey: 'jobManagement', icon: <Briefcase className="w-5 h-5" />, path: '/admin/jobs' },
+    { labelKey: 'requestsComplaints', icon: <MessageSquare className="w-5 h-5" />, path: '/admin/requests' },
+    { labelKey: 'digitalIdSystem', icon: <IdCard className="w-5 h-5" />, path: '/admin/digital-id' },
+    { labelKey: 'notifications', icon: <Bell className="w-5 h-5" />, path: '/admin/notifications' },
+    { labelKey: 'reports', icon: <FileText className="w-5 h-5" />, path: '/admin/reports' },
+  ];
+
+  const specialEmployeeMenuItems = [
+    { labelKey: 'dashboard', icon: <LayoutDashboard className="w-5 h-5" />, path: '/special-employee/dashboard', readOnly: true },
+    { labelKey: 'residents', icon: <Users className="w-5 h-5" />, path: '/special-employee/residents' },
+    { labelKey: 'employees', icon: <UserCog className="w-5 h-5" />, path: '/special-employee/employees', readOnly: true },
+    { labelKey: 'jobManagement', icon: <Briefcase className="w-5 h-5" />, path: '/special-employee/jobs' },
+    { labelKey: 'requestsComplaints', icon: <MessageSquare className="w-5 h-5" />, path: '/special-employee/requests' },
+    { labelKey: 'digitalIdSystem', icon: <IdCard className="w-5 h-5" />, path: '/special-employee/digital-id' },
+    { labelKey: 'notifications', icon: <Bell className="w-5 h-5" />, path: '/special-employee/notifications' },
+    { labelKey: 'reports', icon: <FileText className="w-5 h-5" />, path: '/special-employee/reports' },
   ];
 
   const employeeMenuItems = [
-    { label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" />, path: '/employee/dashboard' },
-    { label: 'My Jobs', icon: <Briefcase className="w-5 h-5" />, path: '/employee/jobs' },
-    { label: 'Service Requests', icon: <ClipboardList className="w-5 h-5" />, path: '/employee/requests' },
-    { label: 'ID Verification', icon: <IdCard className="w-5 h-5" />, path: '/employee/verify-id' },
-    { label: 'Notifications', icon: <Bell className="w-5 h-5" />, path: '/employee/notifications' },
+    { labelKey: 'myJobs', icon: <Briefcase className="w-5 h-5" />, path: '/employee/dashboard' },
+    { labelKey: 'notifications', icon: <Bell className="w-5 h-5" />, path: '/employee/notifications' },
   ];
 
   const residentMenuItems = [
-    { label: 'Dashboard', icon: <Home className="w-5 h-5" />, path: '/resident/dashboard' },
-    { label: 'My Requests', icon: <ClipboardList className="w-5 h-5" />, path: '/resident/requests' },
-    { label: 'Digital ID', icon: <IdCard className="w-5 h-5" />, path: '/resident/digital-id' },
-    { label: 'Profile', icon: <Users className="w-5 h-5" />, path: '/resident/profile' },
+    { labelKey: 'dashboard', icon: <Home className="w-5 h-5" />, path: '/resident/dashboard' },
+    { labelKey: 'myRequests', icon: <ClipboardList className="w-5 h-5" />, path: '/resident/requests' },
+    { labelKey: 'digitalId', icon: <IdCard className="w-5 h-5" />, path: '/resident/digital-id' },
+    { labelKey: 'profile', icon: <Users className="w-5 h-5" />, path: '/resident/profile' },
   ];
 
   const getMenuItems = () => {
-    if (user?.role === 'admin' || user?.role === 'special-employee') return adminMenuItems;
+    if (user?.role === 'admin') return adminMenuItems;
+    if (user?.role === 'special-employee') return specialEmployeeMenuItems;
     if (user?.role === 'employee') return employeeMenuItems;
     if (user?.role === 'resident') return residentMenuItems;
     return [];
@@ -78,10 +84,11 @@ export default function DashboardLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Top Navbar */}
       <nav className="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-
+            {/* Left Section */}
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -91,10 +98,13 @@ export default function DashboardLayout({ children }) {
               </button>
               <div className="flex items-center gap-2">
                 <Building2 className="w-8 h-8 text-blue-600" />
-                <span className="hidden sm:block">Property Management</span>
+                <span className="hidden sm:block text-blue-700">
+                  {t('propertyManagement')}
+                </span>
               </div>
             </div>
 
+            {/* Search Bar - Desktop (admin only) */}
             {user?.role === 'admin' && (
               <div className="hidden md:block flex-1 max-w-2xl mx-8">
                 <div className="relative">
@@ -103,37 +113,55 @@ export default function DashboardLayout({ children }) {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search residents, employees, jobs..."
+                    placeholder={t('searchPlaceholder')}
                     className="w-full pl-11 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
               </div>
             )}
 
-            <div className="flex items-center gap-4">
-              <LanguageSwitcher />
-              <NotificationBell />
-              <div className="hidden sm:flex items-center gap-3 pl-4 border-l border-gray-200">
+            {/* Right Section */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* ── Amharic / English Language Toggle ── */}
+              <button
+                onClick={toggleLanguage}
+                title={lang === 'en' ? 'Switch to Amharic' : 'ወደ እንግሊዝኛ ቀይር'}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+              >
+                <Globe className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline">{t('switchLanguage')}</span>
+              </button>
+
+              {/* Bell */}
+              <button className="relative p-2 hover:bg-gray-100 rounded-lg">
+                <Bell className="w-6 h-6 text-gray-600" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+              </button>
+
+              {/* User Info */}
+              <div className="hidden sm:flex items-center gap-3 pl-3 border-l border-gray-200">
                 <div className="text-right">
                   <p className="text-gray-900">{user?.name}</p>
                   <p className="text-gray-500 capitalize">{user?.role?.replace('-', ' ')}</p>
                 </div>
                 <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                  <span className="text-white">{user?.name.charAt(0)}</span>
+                  <span className="text-white">{user?.name?.charAt(0)}</span>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </nav>
 
-      <aside className={`
-        fixed top-16 left-0 bottom-0 w-64 bg-white border-r border-gray-200 z-40 transition-transform duration-300
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-      `}>
-        <div className="p-4 h-full overflow-y-auto">
-          <nav className="space-y-1">
+      {/* Sidebar */}
+      <aside
+        className={`
+          fixed top-16 left-0 bottom-0 w-64 bg-white border-r border-gray-200 z-40 transition-transform duration-300
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}
+      >
+        <div className="p-4 h-full overflow-y-auto flex flex-col">
+          <nav className="space-y-1 flex-1">
             {menuItems.map((item, index) => {
               const isActive = location.pathname === item.path;
               return (
@@ -152,28 +180,32 @@ export default function DashboardLayout({ children }) {
                   `}
                 >
                   {item.icon}
-                  <span>{item.label}</span>
+                  <span className="flex-1 text-left">{t(item.labelKey)}</span>
+                  {item.readOnly && (
+                    <Lock className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" title="Read-only" />
+                  )}
                 </button>
               );
             })}
-
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors mt-4"
-            >
-              <LogOut className="w-5 h-5" />
-              <span>Logout</span>
-            </button>
           </nav>
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition-colors mt-2"
+          >
+            <LogOut className="w-5 h-5" />
+            <span>{t('logout')}</span>
+          </button>
         </div>
       </aside>
 
+      {/* Main Content */}
       <main className="lg:pl-64 pt-16">
-        <div className="p-4 sm:p-6 lg:p-8">
-          {children}
-        </div>
+        <div className="p-4 sm:p-6 lg:p-8">{children}</div>
       </main>
 
+      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30 top-16"
